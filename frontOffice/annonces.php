@@ -2,41 +2,66 @@
 <?php require_once('../includes/functions.php') ?>
 <?php require_once('../includes/flash.php') ?>
 
-<?php
 
-// indiqué le chemin de votre fichier JSON, il peut s'agir d'une URL
-
-
-
-
-
-
-
-//var_dump($categories);
-
-$categories = sql("SELECT * FROM categorie")->fetchall();
-
-
-
-// insertion en bdd
-
-
-if ($_POST) {
-    //Au moins une photo doit être postée
-
-
+<?php if ($_POST) {
     $errors = 0;
-    
-    if (!empty($_FILES['photos1']['name']) ) {
+
+    /*    if (empty($_POST['titre']) || iconv_strlen(trim(($_POST['titre']))) <= 3) {
+        $errors++;
+        set_flash('Votre titre doit comporter un minimum de 3 caractères', 'warning');
+        redirect(URL . 'frontOffice/annonces.php');
+    } */
+
+    /*    if (empty($_POST['description_courte']) || iconv_strlen(trim(($_POST['description_courte']))) <= 5) {
+        $errors++;
+        set_flash('Votre Description doit comporter un minimum de 5 caractères', 'warning');
+        redirect(URL . 'frontOffice/annonces.php');
+    } */
+
+    /*   if (empty($_POST['description_longue']) || iconv_strlen(trim(($_POST['description_longue']))) <= 5) {
+        $errors++;
+        set_flash('Votre Description doit comporter un minimum de 30 caractères', 'warning');
+        redirect(URL . 'frontOffice/annonces.php');
+    } */
+
+    /* if (!is_numeric (getfloat ($_POST['prix']))) {
+        $$errors++;
+        set_flash('Votre prix doit avoir une valeur numérique', 'warning');
+        redirect(URL . 'frontOffice/annonces.php');
+
+    } */
+    /*  if (empty($_POST['categorie'])) {
+        $errors++;
+        set_flash('Veuillez choisir une catégorie', 'warning');
+        redirect(URL . 'frontOffice/annonces.php');
+
+    } */
+
+
+   /*  if (empty($_POST['code_postal']) || iconv_strlen(trim(($_POST['code_postal']))) != 5 ) {
+        $errors++;
+        set_flash('Votre code postal doit comporter un minimum de 5 caractères et doit être numérique', 'warning');
+        redirect(URL . 'frontOffice/annonces.php');
+    } */
+
+ /*    if (empty($_POST['ville'])) {
+        $errors++;
+        set_flash('Veuillez selectionner votre ville', 'warning');
+        redirect(URL . 'frontOffice/annonces.php');
+    } */
+
+    //On vérifie la présence d'au moins une photo
+
+    if (!empty($_FILES['photos1']['name'])) {
 
         $ext_autorisees = array('image/jpeg', 'image/png', 'image/gif');
-        
+
 
         // in_array verifie la présence d'un élément dans le tableau
         if (!in_array($_FILES['photos1']['type'], $ext_autorisees)) {
             $errors++;
-            //redirect(URL.'frontOffice/annonces.php');
             set_flash('Seules les images JPEG, PNG et GIF sont autorisées', 'danger');
+            redirect(URL.'frontOffice/annonces.php');
         } else {
 
             // copie physique du fichier
@@ -44,10 +69,10 @@ if ($_POST) {
             $nom_fichier = [];
             while ($i <= 5) {
 
-                array_push($nom_fichier, $_SESSION['user']['id_membre'].$_FILES['photos' . $i]['name']/*  . $i . '.' . pathinfo($_FILES['photos' . $i]['name'] */);
+                array_push($nom_fichier, uniqid() . $_FILES['photos' . $i]['name']/*  . $i . '.' . pathinfo($_FILES['photos' . $i]['name'] */);
                 $i++;
             }
-          
+
 
             // Chemin réel du fichier ( ex: c:/wamp64/www + /swag/ + images/site/)
             $chemin = $_SERVER['DOCUMENT_ROOT'] . URL . 'images/site/';
@@ -78,97 +103,35 @@ if ($_POST) {
             );
 
             $id_photo =  $pdo->lastInsertId();
-            // var_dump($id_photo);
-
-            //traitement du titre
-            if (isset($_POST['titre'])) {
-                if (iconv_strlen($_POST['titre'] < 3) && iconv_strlen($_POST['titre']) >= 19) {
-                    $errors++;
-                     redirect(URL.'frontOffice/annonces.php');
-                    set_flash('Votre titre doit comporter entre 3 et 19 caractères', 'info');
-                    //traitement des descriptions // seule la description courte est obligatoire
-                }
-            }
-            else {
-                $errors++;
-                set_flash('Merci de compléter votre titre','warning');
-            }
-            //traitement des descriptions, seules la courte est obligatoire
-       /*      if (!empty($_POST['description_courte']) && trim(iconv_strlen($_POST['description_courte']) > 15)) {
-
-                if (trim(iconv_strlen($_POST['description_longue'])) > 250 && trim(iconv_strlen($_POST['description_courte'])) > 250) {
-                    $errors++;
-                    //redirect(URL.'frontOffice/annonces.php');
-                    set_flash('Votre description ne doit pas dépasser 250 caractères', 'info');
-                }
-            }  */
             
-            //traitement du prix (variable numerique obligatoirement)
-            if (!trim(is_numeric($_POST['prix']))) {
-                $errors++;
-                redirect(URL.'frontOffice/annonces.php');
-                set_flash('Le prix saisi n\'est pas valide', 'warning');
-            }
-            if (empty($_POST['categorie'])) {
-                $errors++;
-                 redirect(URL.'frontOffice/annonces.php');
-                set_flash('Merci de choisir une catégorie', 'danger');
-            }
-
-            if ($errors == 0) {
-                set_flash("L'annonce $_POST[titre] a bien été déposée", 'success');
-                //redirect(URL);
-
-
-                sql("INSERT INTO annonce 
-           VALUES (NULL, :titre, :descsription_courte,:description_longue, :prix, :photo, :pays, :ville, :adresse, :cp, :membre_id, :photo_id, :categorie_id, NOW())", array(
-
-                    'titre' => $_POST['titre'],
-                    'descsription_courte' => $_POST['description_courte'],
-                    'description_longue' => $_POST['description_longue'],
-                    'prix' => $_POST['prix'],
-                    'photo' => $_FILES['photos1']['name'],
-                    'pays' => 'France',
-                    'ville' => $_POST['ville'],
-                    'adresse' => $_POST['adresse'],
-                    'cp' => $_POST['code_postal'],
-                    'membre_id' => $_SESSION['user']['id_membre'],
-                    'photo_id' => $id_photo,
-                    'categorie_id' => $_POST['categorie'],
-
-
-                ));
-            }else {
-                set_flash('Veuillea compléter tous les champs obligatoires', 'warning');
-            }
         }
-    } else {
-        
-        set_flash('Vous devez au minimum ajouter une photo au bon format', 'warning');
+
+
+
+    }else {
+        set_flash('Veuillez ajouter une photo', 'warning');
         redirect(URL.'frontOffice/annonces.php');
+
+
     }
-}
 
-//Bonus quand j'aurais le temps
 
-//define('URL','https://api-adresse.data.gouv.fr/search/?q=77100&type=municipality');
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, URL);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-$reponse = curl_exec($ch);
-$datas = json_decode($reponse, JSON_PRETTY_PRINT);
+    //fin du post
+} ?>
 
-echo "<pre>";
-print_r($datas);
-echo "</pre>"; ?>
 
-<!-- bonus -->
-<?php $title = "Annonces";
-include_once('../includes/header.php') ;var_dump($_FILES); var_dump($_POST);
+
+
+
+
+
+
+
+<?php var_dump($_POST);
+$title = 'Annonces';
+include_once('../includes/header.php');
 ?>
-
-
 <a href="<?= URL . 'frontOffice/profil.php' ?>"><i class="bi bi-arrow-return-left container ms-5 ">Retour au profil</i></a>
 
 <div class="container-fluid bg-light m-3">
@@ -180,14 +143,14 @@ include_once('../includes/header.php') ;var_dump($_FILES); var_dump($_POST);
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon2">Titre</span>
-                    <input type="text" class="form-control form-control-lg" name="titre" placeholder="<?= $_POST['titre'] ?? 'Votre titre' ?>" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <input type="text" class="form-control form-control-lg" name="titre" id="titre" value="<?= $_POST['titre'] ?? '' ?>" aria-label="Recipient's username" aria-describedby="basic-addon2">
                 </div>
 
                 <div class=" ">
                     <label for="">Déscription courte</label>
                     <div class="form-floating w-75 mb-3">
 
-                        <textarea class="form-control" name="description_courte" id="floatingTextarea" cols="20"><?= $_POST['description_courte'] ?? '' ?></textarea>
+                        <textarea class="form-control" name="description_courte" id="description_courte" cols="20"><?= $_POST['description_courte'] ?? '' ?></textarea>
                     </div>
 
                 </div>
@@ -197,18 +160,18 @@ include_once('../includes/header.php') ;var_dump($_FILES); var_dump($_POST);
                     <label for="">Déscription longue</label>
                     <div class="form-floating w-75 mb-3">
 
-                        <textarea class="form-control" name="description_longue" id="floatingTextarea" cols="20"><?= $_POST['description_longue'] ?? '' ?></textarea>
+                        <textarea class="form-control" name="description_longue" id="description_longue" cols="20"><?= $_POST['description_longue'] ?? '' ?></textarea>
                     </div>
 
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon3">€</span>
+                    <span class="input-group-text" id="basic-addon3"><i class="bi bi-currency-euro"></i></span>
                     <input type="text" class="form-control form-control-lg" name="prix" placeholder="<?= $_POST['prix'] ?? 'Prix figurant dans l\'annonce ' ?>" aria-label="Prix figurant dans l\'annonce " aria-describedby="basic-addon3">
                 </div>
                 <div class=" ">
 
                     <label for="" class=""></label>
-                    <select class="f</div>orm-select form-select-md mb-3  " name="categorie" aria-label=".form-select-lg example">
+                    <select class="f</div>orm-select form-select-md mb-3 " id="categorie" name="categorie" aria-label=".form-select-lg example">
                         <option disabled selected>Catégorie de l'annonce</option>
                         <?php foreach ($categories as $key => $categorie) : ?>
 
@@ -227,11 +190,11 @@ include_once('../includes/header.php') ;var_dump($_FILES); var_dump($_POST);
 
                     <?php $i = 1;
                     while ($i <= 5) : ?>
-                        <label class="btn btn-default btn-file heading d-flex " >
-                            <i class="bi bi-camera-fill fs-1  mt-3"  id="photos<?=$i?>" ></i> <input name="photos<?=$i?>" id="input<?=$i?>" type="file" style="display: none;" >
-                            <img id="preview<?=$i?>" src="../images/admin/success.png" style="width: 80px; display:none;" alt=" ">
+                        <label class="btn btn-default btn-file heading d-flex ">
+                            <i class="bi bi-camera-fill fs-1  mt-3" id="photos<?= $i ?>"></i> <input name="photos<?= $i ?>" id="input<?= $i ?>" type="file" style="display: none;">
+                            <img id="preview<?= $i ?>" src="../images/admin/success.png" style="width: 80px; display:none;" alt=" ">
                         </label>
-                        
+
                     <?php $i++;
                     endwhile ?>
 
@@ -243,16 +206,17 @@ include_once('../includes/header.php') ;var_dump($_FILES); var_dump($_POST);
 
                 <!-- formulaire adresse postale avec API -->
                 <div class="input-group mb-3 ">
-                    <span class="input-group-text position-absolute" id="basic-addon2">Code Postal</span>
-                    <input type="text" class="form-control form-control-lg" name="code_postal" id="code_postal" placeholder="<?= $_POST['code_postal'] ?? 'Votre Code postal' ?>" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <span class="input-group-text " id="basic-addon">Code Postal</span>
+                    <input type="text" class="form-control form-control-lg" name="code_postal" id="code_postal" placeholder="<?= $_POST['code_postal'] ?? 'Votre Code postal' ?>" aria-label="Recipient's username" aria-describedby="basic-addon">
                     <label style="display: none;" class="bg-danger position-relative " id="erreur_code_postal"></label>
                 </div>
+
 
                 <div class="mb-3">
 
                     <select class="form-select " aria-label="Default select example" name="ville" id="ville">
 
-                        <option selected disabled class=""><?='Selectionner votre ville, après avoir saisi votre code postal'?></option>
+                        <option selected disabled class=""><?= 'Veuillez Selectionner votre ville, après avoir saisi votre code postal' ?></option>
 
 
                     </select>

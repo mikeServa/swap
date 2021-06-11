@@ -1,5 +1,45 @@
 $(document).ready(function() {
 
+    //Stylisation du formulaire pendant la saisie
+    function input_valid($id, $longueur) {
+
+        $('#' + $id).on('keyup', function(e) {
+
+            if (($('#' + $id).val()).length < $longueur) {
+                $('#' + $id).css('color', 'red');
+            } else {
+                $('#' + $id).css('color', 'black');
+            }
+        });
+    }
+    input_valid('titre', 3);
+    input_valid('description_courte', 5);
+    input_valid('description_longue', 30);
+    input_valid('mdp', 8);
+    input_valid('pseudo', 3);
+    input_valid('nom', 5);
+    input_valid('prenom', 5);
+    input_valid('code_postal', 5);
+
+
+    //gestion de la selection des catégories
+
+    function input_focus($select) {
+        $($select).css('backgroundColor', 'red').css('color', 'white');
+
+        $($select).on('change', function() {
+
+            $($select).css('backgroundColor', 'green');
+            $($select).css('color', 'white');
+
+
+        });
+    }
+    input_focus($('#categorie'));
+    input_focus($('#ville'));
+
+
+
 
 
 
@@ -29,6 +69,10 @@ $(document).ready(function() {
                     //console.log(value.nom); //.nom pour reccuperer le nom de la communce voir la documentation de l'api https://api.gouv.fr/documentation/api-geo
                     //console.log(value);
                     $(ville).append('<option name="' + value.nom + '" value="' + value.nom + '" class="form-select ">' + value.nom + '-' + value.code + '</option>') //permet de remplir un champ html
+                    $(ville).css('backgroundColor', 'green');
+                    $(ville).css('color', 'white');
+
+
                 });
             } else {
                 if ($(codepostal).val()) {
@@ -73,6 +117,7 @@ $(document).ready(function() {
                     //console.log(value.nom); //.nom pour reccuperer le nom de la communce voir la documentation de l'api https://api.gouv.fr/documentation/api-geo
                     //console.log(value);
                     $(region).append('<option name="' + value.nom + '" value="' + value.nom + '" class="form-select ">' + value.nom + '-' + value.code + '</option>') //permet de remplir un champ html
+
                 });
             } else {
                 if ($(codepostal).val()) {

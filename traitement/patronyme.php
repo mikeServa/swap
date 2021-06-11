@@ -5,6 +5,4 @@
     }elseif (trim(iconv_strlen($_POST['prenom'] )) > 19 || trim(iconv_strlen($_POST['nom'] )) > 19 ) {
         $errors++;
         set_flash( "Votre prénom et votre nom ne doivent pas dépasser 19 caractères!", "danger");
-    }else {
-        set_flash('Prenom ok');
-    }
+    } 
