@@ -1,0 +1,16 @@
+FÉLICITATIONS, VOTRE BASE MYSQL A BIEN ÉTÉ CRÉÉE !
+Hôte de connexion (HOST) :
+cl1-sql11
+
+Nom d'utilisateur (LOGIN) :
+pso63331
+
+Nom de BASE :
+pso63331
+
+Mot de passe (PASSWORD) :
+dRQl6SqtGu3L
+
+youness@homypay
+
+

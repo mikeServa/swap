@@ -1,0 +1,35 @@
+:root {
+    --main-color: rgb(15, 15, 109);
+}
+
+.navigation {
+    background-color: var(--main-color);
+}
+
+html {
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+main {
+    padding: 56px 0;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+}
+
+.active {
+    background-color: rgb(74, 74, 117);
+}
+
+.nav-item:hover {
+    transition: 0.3s;
+    background-color: rgb(74, 74, 117);
+}
+
+.annonce {
+    margin-top: 100px;
+}

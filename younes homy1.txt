@@ -1,0 +1,9 @@
+super app tout en un 
+pour la maison
+aide agent immo revenu recurrent
+regroupement des donnees dans une seule application
+ prouth of concept une maquette => bancaire 
+
+swan.io banque asuservice corp banking gestion de compte des cartes => API 
+SYFONY 
+Essentiellement le front

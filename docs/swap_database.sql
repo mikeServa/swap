@@ -1,0 +1,246 @@
+
+/* Hôte de connexion (HOST) :
+cl1-sql11
+
+Nom d'utilisateur (LOGIN) :
+pso63332
+
+Nom de BASE :
+pso63332
+
+Mot de passe (PASSWORD) :
+yRiNtKGRZJWw
+
+Hôte de connexion (HOST) :
+cl1-sql11
+
+Nom d'utilisateur (LOGIN) :
+pso63331
+
+Nom de BASE :
+pso63331
+
+Mot de passe (PASSWORD) :
+dRQl6SqtGu3L */
+
+
+
+
+-- MySQL Workbench Synchronization
+-- Generated: 2021-05-29 11:20
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: Utilisateur
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE SCHEMA IF NOT EXISTS `swap` DEFAULT CHARACTER SET utf8 ;
+
+CREATE TABLE IF NOT EXISTS `swap`.`annonce` (
+  `id_annonce` INT(3) NOT NULL AUTO_INCREMENT,
+  `titre` VARCHAR(255) NULL DEFAULT NULL,
+  `description_courte` VARCHAR(255) NULL DEFAULT NULL,
+  `description_longue` TEXT NULL DEFAULT NULL,
+  `prix` INT(6) NULL DEFAULT NULL,
+  `photo` VARCHAR(200) NULL DEFAULT NULL,
+  `pays` VARCHAR(20) NULL DEFAULT NULL,
+  `ville` VARCHAR(20) NULL DEFAULT NULL,
+  `adresse` VARCHAR(50) NULL DEFAULT NULL,
+  `cp` INT(11) NULL DEFAULT NULL,
+  `membre_id` INT(3) NOT NULL,
+  `photo_id` INT(3) NOT NULL,
+  `categorie_id` INT(3) NOT NULL,
+  `date_enregistrement` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id_annonce`),
+  INDEX `fk_annonce_photo_idx` (`photo_id` ASC),
+  INDEX `fk_annonce_membre1_idx` (`membre_id` ASC),
+  INDEX `fk_annonce_categorie1_idx` (`categorie_id` ASC),
+  CONSTRAINT `fk_annonce_photo`
+    FOREIGN KEY (`photo_id`)
+    REFERENCES `swap`.`photo` (`id_photo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_annonce_membre1`
+    FOREIGN KEY (`membre_id`)
+    REFERENCES `swap`.`membre` (`id_membre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_annonce_categorie1`
+    FOREIGN KEY (`categorie_id`)
+    REFERENCES `swap`.`categorie` (`id_categorie`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `swap`.`photo` (
+  `id_photo` INT(3) NOT NULL AUTO_INCREMENT,
+  `photo1` VARCHAR(255) NULL DEFAULT NULL,
+  `photo2` VARCHAR(255) NULL DEFAULT NULL,
+  `photo3` VARCHAR(255) NULL DEFAULT NULL,
+  `photo4` VARCHAR(255) NULL DEFAULT NULL,
+  `photo5` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_photo`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `swap`.`commentaire` (
+  `id_commentaire` INT(3) NOT NULL AUTO_INCREMENT,
+  `membre_id` INT(3) NOT NULL,
+  `annonce_id` INT(3) NOT NULL,
+  `commentaire` TEXT NULL DEFAULT NULL,
+  `date_enregistrement` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id_commentaire`),
+  INDEX `fk_commentaire_membre1_idx` (`membre_id` ASC),
+  INDEX `fk_commentaire_annonce1_idx` (`annonce_id` ASC),
+  CONSTRAINT `fk_commentaire_membre1`
+    FOREIGN KEY (`membre_id`)
+    REFERENCES `swap`.`membre` (`id_membre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_commentaire_annonce1`
+    FOREIGN KEY (`annonce_id`)
+    REFERENCES `swap`.`annonce` (`id_annonce`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `swap`.`note` (
+  `id_note` INT(3) NOT NULL AUTO_INCREMENT,
+  `membre_id1` INT(3) NOT NULL,
+  `membre_id2` INT(3) NOT NULL,
+  `note` INT(3) NULL DEFAULT NULL,
+  `avis` TEXT NULL DEFAULT NULL,
+  `date_enregistrement` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id_note`),
+  INDEX `fk_note_membre1_idx` (`membre_id1` ASC),
+  INDEX `fk_note_membre2_idx` (`membre_id2` ASC),
+  CONSTRAINT `fk_note_membre1`
+    FOREIGN KEY (`membre_id1`)
+    REFERENCES `swap`.`membre` (`id_membre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_note_membre2`
+    FOREIGN KEY (`membre_id2`)
+    REFERENCES `swap`.`membre` (`id_membre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `swap`.`categorie` (
+  `id_categorie` INT(3) NOT NULL AUTO_INCREMENT,
+  `titre` VARCHAR(255) NULL DEFAULT NULL,
+  `motscles` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id_categorie`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `swap`.`membre` (
+  `id_membre` INT(3) NOT NULL AUTO_INCREMENT,
+  `pseudo` VARCHAR(20) NULL DEFAULT NULL,
+  `mdp` VARCHAR(60) NULL DEFAULT NULL,
+  `nom` VARCHAR(20) NULL DEFAULT NULL,
+  `prenom` VARCHAR(20) NULL DEFAULT NULL,
+  `telephone` VARCHAR(20) NULL DEFAULT NULL,
+  `email` VARCHAR(50) NULL DEFAULT NULL,
+  `civilite` ENUM('m', 'f') NULL DEFAULT NULL,
+  `satut` INT(1) NULL DEFAULT NULL,
+  `date_enregistrement` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id_membre`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- MySQL Workbench Synchronization
+-- Generated: 2021-05-29 11:53
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: Utilisateur
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE TABLE IF NOT EXISTS `swap`.`siteinfo` (
+  `id_info` INT(11) NOT NULL AUTO_INCREMENT,
+  `nom` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_info`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- MySQL Workbench Synchronization
+-- Generated: 2021-05-29 12:05
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: Utilisateur
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+ALTER TABLE `swap`.`siteinfo` 
+ADD COLUMN `valeur` VARCHAR(100) NULL DEFAULT NULL AFTER `nom`;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- MySQL Workbench Synchronization
+-- Generated: 2021-05-31 13:00
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: Utilisateur
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+ALTER TABLE `swap`.`annonce` 
+CHANGE COLUMN `prix` `prix` DOUBLE NULL DEFAULT NULL ;
+
+ALTER TABLE `swap`.`membre` 
+CHANGE COLUMN `satut` `statut` INT(1) NULL DEFAULT NULL ;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+/* Photo 1 required */
+-- MySQL Workbench Synchronization
+-- Generated: 2021-06-07 09:16
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: Utilisateur
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+ALTER TABLE `swap`.`photo` 
+CHANGE COLUMN `photo1` `photo1` VARCHAR(255) NOT NULL ;
+/* required */
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
